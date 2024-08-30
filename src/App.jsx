@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import { useState } from 'react';
+import './App.css';
+import data from './data'
+import Receipt from './Components/Receipt/Receip';
+import Destination from './components/Destination/Destination';
+import Food from './Components/Food/Food';
+import Hotel from './components/Hotel/Hotel';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const handleSelect = (item) => {
+    setSelectedItems((prevItems) => {
+      const filteredItems = prevItems.filter(
+        (prevItem) =>
+          (prevItem.nombre && !item.nombre) ||
+          (prevItem.titulo && !item.titulo)
+      );
+      
+      return [...filteredItems, item];
+    });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app">
+      <div className="left-side">
+        <Receipt selectedItems={selectedItems} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className="right-side">
+        <Destination destinos={data.destinosdla} onSelect={handleSelect} />
+        <Food alimentacion={data.alimentacion} onSelect={handleSelect} />
+        <Hotel hoteles={data.hoteles} onSelect={handleSelect} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
